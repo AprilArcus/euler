@@ -96,8 +96,22 @@ void problem7(unsigned limit)
 	       limit, suffix, primes[limit-1]);
 }
 
-void problem8(unsigned window, char *bignum)
+void problem8(unsigned window, char *bignum_file_path, int rows, int cols)
 {
+	FILE* bignum_file = fopen(bignum_file_path, "r");
+	if (!bignum_file) {
+		fprintf(stderr,
+		        "Error: the file \"%s\" could not be opened.",
+		        bignum_file_path);
+		exit(EXIT_FAILURE);
+	}
+	char bignum[rows*cols+1];
+	for (int i = 0; i < rows; ++i) {
+		fgets(&bignum[i*cols],cols+1,bignum_file);
+		fgetc(bignum_file); // chew the delimiting linebreak
+	}
+	fclose(bignum_file);
+
 	unsigned accumulator = 0;
 	unsigned length = strlen(bignum);
 	for (int i=0; i<=length-window; ++i) {
@@ -130,73 +144,70 @@ void problem9(const unsigned perim)
 	       "a\u00B2+b\u00B2=c\u00B2 and a+b+c=%u.", perim);
 }
 
-void problem11(unsigned window, char *grid_file_path)
+void problem11(unsigned window, char *grid_file_path, int grid_height, int grid_width)
 {
-	static const int grid_height = 20;
-	static const int grid_width = 20;
-
 	FILE *grid_file = fopen(grid_file_path, "r");
-	char charbuffer[3];
 	if (!grid_file) {
 		fprintf(stderr,
 		        "Error: the file \"%s\" could not be opened.",
 		        grid_file_path);
 		exit(EXIT_FAILURE);
 	}
+	char charbuffer[3];
 	uint_fast8_t grid[grid_height][grid_width]; // values on [0,99]
-	for (int y = 0; y < grid_height; y++) {
-		for (int x = 0; x < grid_width; x++) {
+	for (int row = 0; row < grid_height; ++row) {
+		for (int col = 0; col < grid_width; ++col) {
 			fgets(charbuffer,3,grid_file);
-			grid[y][x] = atoi(charbuffer);
+			grid[row][col] = atoi(charbuffer);
 			fgetc(grid_file); // chew the delimiting space
 		}
 	}
 	fclose(grid_file);
 
-	uint_fast32_t result = 0;
+	uint_fast32_t accumulator = 0;
 	// Case 1: Horizontal
-	for (int y = 0; y < grid_height; y++) {
-		for (int x = 0; x < grid_width - window; x++) {
+	for (int row = 0; row < grid_height; ++row) {
+		for (int col = 0; col < grid_width - window; ++col) {
 			uint_fast32_t product = 1;
-			for (int i = 0; i < window; i++) {
-				product *= grid[y][x+i];
+			for (int i = 0; i < window; ++i) {
+				product *= grid[row][col+i];
 			}
-			if (product > result) result = product;
+			if (product > accumulator) accumulator = product;
 		}
 	}
 	// Case 2: Vertical
-	for (int y = 0; y < grid_height - window; y++) {
-		for (int x=0; x < grid_width; x++) {
+	for (int row = 0; row < grid_height - window; ++row) {
+		for (int col = 0; col < grid_width; ++col) {
 			uint_fast32_t product = 1;
-			for (int i = 0; i < window; i++) {
-				product *= grid[y+i][x];
+			for (int i = 0; i < window; ++i) {
+				product *= grid[row+i][col];
 			}
-			if (product > result) result = product;
+			if (product > accumulator) accumulator = product;
 		}
 	}
 	// Case 3: Diagonal NW-SE
-	for (int y = 0; y < grid_height - window; y++) {
-		for (int x=0; x < grid_width - window; x++) {
+	for (int row = 0; row < grid_height - window; ++row) {
+		for (int col = 0; col < grid_width - window; ++col) {
 			uint_fast32_t product = 1;
-			for (int i = 0; i < window; i++) {
-				product *= grid[y+i][x+i];
+			for (int i = 0; i < window; ++i) {
+				product *= grid[row+i][col+i];
 			}
-			if (product > result) result = product;
+			if (product > accumulator) accumulator = product;
 		}
 	}
 	// Case 4: Diagonal SW-NE
-	for (int y = 0; y < grid_height - window; y++) {
-		for (int x = window-1; x < grid_width; x++) {
+	for (int row = 0; row < grid_height - window; ++row) {
+		for (int col = window-1; col < grid_width; ++col) {
 			uint_fast32_t product = 1;
-			for (int i = 0; i < window; i++) {
-				product *= grid[y+i][x-i];
+			for (int i = 0; i < window; ++i) {
+				product *= grid[row+i][col-i];
 			}
-			if (product > result) result = product;
+			if (product > accumulator) accumulator = product;
 		}
 	}
 
 	printf("Problem 11: The largest sum of %d colinear integers in the grid "
-		   "\"%s\" is %d\n", window, grid_file_path, result);
+		   "\"%s\" is %d\n", window, grid_file_path, accumulator);
 }
 
 int main()
@@ -208,20 +219,7 @@ int main()
 	problem5(1,20);
 	problem6(100);
 	problem7(10001);
-	problem8(5,"73167176531330624919225119674426574742355349194934969835203127"
-"74506326239578318016984801869478851843858615607891129494954595017379583319528"
-"53208805511125406987471585238630507156932909632952274430435576689664895044524"
-"45231617318564030987111217223831136222989342338030813533627661428280644448664"
-"52387493035890729629049156044077239071381051585930796086670172427121883998797"
-"90879227492190169972088809377665727333001053367881220235421809751254540594752"
-"24352584907711670556013604839586446706324415722155397536978179778461740649551"
-"49290862569321978468622482839722413756570560574902614079729686524145351004748"
-"21663704844031998900088952434506585412275886668811642717147992444292823086346"
-"56748139191231628245861786645835912456652947654568284891288314260769004224219"
-"02267105562632111110937054421750694165896040807198403850962455444362981230987"
-"87992724428490918884580156166097919133875499200524063689912560717606058861164"
-"67109405077541002256983155200055935729725716362695618826704282524836008232575"
-"30420752963450");
+	problem8(5,"problem8.strings",20,50);
 	problem9(1000);
-	problem11(4,"problem11.strings");
+	problem11(4,"problem11.strings",20,20);
 }
