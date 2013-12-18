@@ -96,7 +96,10 @@ void problem7(unsigned limit)
 	       limit, suffix, primes[limit-1]);
 }
 
-void problem8(unsigned window, char *bignum_file_path, int rows, int cols)
+void problem8(unsigned window,
+              char *bignum_file_path,
+              unsigned rows,
+              unsigned cols)
 {
 	FILE* bignum_file = fopen(bignum_file_path, "r");
 	if (!bignum_file) {
@@ -144,7 +147,10 @@ void problem9(const unsigned perim)
 	       "a\u00B2+b\u00B2=c\u00B2 and a+b+c=%u.", perim);
 }
 
-void problem11(unsigned window, char *grid_file_path, int grid_height, int grid_width)
+void problem11(unsigned window,
+               char *grid_file_path,
+               unsigned grid_height,
+               unsigned grid_width)
 {
 	FILE *grid_file = fopen(grid_file_path, "r");
 	if (!grid_file) {
