@@ -139,8 +139,8 @@ void problem11(unsigned window, char *grid_file_path)
 	char charbuffer[3];
 	if (!grid_file) {
 		fprintf(stderr,
-			    "Error: the file \"%s\" could not be opened.",
-			    grid_file_path);
+		        "Error: the file \"%s\" could not be opened.",
+		        grid_file_path);
 		exit(EXIT_FAILURE);
 	}
 	uint_fast8_t grid[grid_height][grid_width]; // values on [0,99]
