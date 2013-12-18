@@ -206,8 +206,8 @@ void problem11(unsigned window, char *grid_file_path, int grid_height, int grid_
 		}
 	}
 
-	printf("Problem 11: The largest sum of %d colinear integers in the grid "
-		   "\"%s\" is %d\n", window, grid_file_path, accumulator);
+	printf("Problem 11: The largest sum of %u colinear integers in the grid "
+		   "\"%s\" is %u\n", window, grid_file_path, accumulator);
 }
 
 int main()
