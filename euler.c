@@ -89,7 +89,7 @@ void problem7(unsigned n)
 		result = first_primes[n-1];
 	} else {
 		// guess the magnitude of the result
-		// the 𝑛th prime is ≤ 𝑛*ln(𝑛)+𝑛*ln(ln(𝑛)) for 𝑛 ≥ 6	
+		// the 𝑛th prime is ≤ (𝑛)(ln(𝑛))+(𝑛)(ln(ln(𝑛)) for 𝑛 ≥ 6	
 		double float_limit = n*log(n)+n*log(log(n));
 		unsigned limit = (int)float_limit;
 		unsigned sqrt_limit = (int)sqrt(float_limit);
