@@ -12,11 +12,7 @@ void problem1(unsigned fizz, unsigned buzz, unsigned limit)
 		if ( i%fizz == 0 || i%buzz == 0 ) accumulator += i;
 	}
 	printf("Problem 1: The sum of all the multiples of %u or %u below %u is "
-	       "%u.\n",
-	       fizz,
-	       buzz,
-	       limit,
-	       accumulator);
+	       "%u.\n", fizz, buzz, limit, accumulator);
 }
 
 void problem2(bool odd, unsigned limit)
