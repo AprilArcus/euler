@@ -97,7 +97,7 @@ void problem7(unsigned limit)
 }
 
 void problem8(unsigned window,
-              char *bignum_file_path,
+              char* bignum_file_path,
               unsigned rows,
               unsigned cols)
 {
@@ -124,8 +124,11 @@ void problem8(unsigned window,
 		}
 		if (product > accumulator) accumulator = product;
 	}
-	printf("Problem 8: The greatest product of %u consecutive digits is %u.\n",
-	       window, accumulator);
+	printf("Problem 8: The greatest product of %u consecutive digits in the "
+		   "string %s is %u.\n",
+	       window,
+	       bignum_file_path,
+	       accumulator);
 }
 
 void problem9(const unsigned perim)
@@ -211,7 +214,6 @@ void problem11(unsigned window,
 			if (product > accumulator) accumulator = product;
 		}
 	}
-
 	printf("Problem 11: The largest sum of %u colinear integers in the grid "
 		   "\"%s\" is %u\n", window, grid_file_path, accumulator);
 }
