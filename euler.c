@@ -27,13 +27,14 @@ void problem2(bool odd, unsigned limit)
 	}
 	printf("Problem 2: The sum of the ");
 	(odd) ? printf("odd ") : printf("even ");
-	printf("fibonacci numbers below %u is %u.\n",limit, accumulator);
+	printf("fibonacci numbers below %u is %u.\n", limit, accumulator);
 }
 
 void problem3(uint_fast64_t number)
 {
 	printf("Problem 3: The largest prime factor of %llu is %llu.\n",
-	       number,greatestPrimeFactor(number) );
+	       number,
+	       greatestPrimeFactor(number));
 }
 
 void problem4(unsigned base, unsigned digits)
@@ -73,7 +74,8 @@ void problem6(unsigned limit)
 	squareOfSums *= squareOfSums;
 	printf("Problem 6: The difference between the sum of the squares of the "
 	       "first %u natural numbers and the square of their sum is %u.\n",
-	       limit, squareOfSums-sumOfSquares);
+	       limit,
+	       squareOfSums-sumOfSquares);
 }
 
 void problem7(unsigned limit)
