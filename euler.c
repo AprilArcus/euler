@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
+#include <assert.h>
 #include "libEuler.h"
 
 void problem1(unsigned fizz, unsigned buzz, unsigned limit)
@@ -78,24 +80,45 @@ void problem6(unsigned limit)
 	       squareOfSums-sumOfSquares);
 }
 
-void problem7(unsigned limit)
+void problem7(unsigned n)
 {
-	unsigned primes[limit];
-	primes[0] = 2;
-	primes[1] = 3;
-	for (int i=2; i<limit; ++i) {
-		primes[i] = primes[i-1]+2;
-		for (int j=1; j<i; ++j) {
-			if (primes[i]%primes[j]==0) {
-				primes[i] += 2;
-				j = 0;
+	assert(n > 0);
+	unsigned result;
+	if (n < 6) {
+		int first_primes[] = {2,3,5,7,11};
+		result = first_primes[n-1];
+	} else {
+		// guess the magnitude of the result
+		// the 𝑛th prime is ≤ 𝑛*ln(𝑛)+𝑛*ln(ln(𝑛)) for 𝑛 ≥ 6	
+		double float_limit = n*log(n)+n*log(log(n));
+		unsigned limit = (int)float_limit;
+		unsigned sqrt_limit = (int)sqrt(float_limit);
+		// build a sieve
+		bool sieve[limit+1];
+		sieve[0] = false;
+		sieve[1] = false;
+		for (int i=2; i <= limit; ++i) {
+			sieve[i] = true;
+		}
+		for (int i=2; i <= sqrt_limit; ++i) {
+			if (sieve[i]) {
+				for(int j=i*2; j <= limit; j+=i) {
+					sieve[j] = false;
+				}
 			}
+		}
+		// walk through the sieve counting primes
+		int m = n;
+		result = 0;
+		while (result <= limit && m > 0) {
+			if (sieve[result]) --m;
+			++result;
 		}
 	}
 	char suffix[3] = "..";
-	ordinalSuffix(limit, suffix);
+	ordinalSuffix(n, suffix);
 	printf("Problem 7: The %u%s prime number is %u.\n",
-	       limit, suffix, primes[limit-1]);
+	       n, suffix, result);
 }
 
 void problem8(unsigned window,
@@ -127,7 +150,7 @@ void problem8(unsigned window,
 		if (product > accumulator) accumulator = product;
 	}
 	printf("Problem 8: The greatest product of %u consecutive digits in the "
-		   "string %s is %u.\n",
+		   "string \"%s\" is %u.\n",
 	       window,
 	       bignum_file_path,
 	       accumulator);
@@ -151,6 +174,30 @@ void problem9(const unsigned perim)
 	printf("Problem 9: There is no integer triplet (a,b,c) satisfying "
 	       "a\u00B2+b\u00B2=c\u00B2 and a+b+c=%u.", perim);
 }
+
+void problem10(unsigned limit) {
+	uint_fast64_t sum = 0;
+	unsigned sqrt_limit = (int)sqrt(limit);
+	bool sieve[limit];
+	for (int i=2; i < limit; ++i) {
+		sieve[i] = true;
+	}
+	for (int i=2; i <= sqrt_limit; ++i) {
+		if (sieve[i]) {
+			sum += i;
+			for(int j=i*2; j < limit; j+=i) {
+				sieve[j] = false;
+			}
+		}
+	}
+	for (int i=sqrt_limit+1; i < limit; ++i) {
+		if (sieve[i]) {
+			sum += i;
+		}
+	}
+	printf("Problem 10: The sum of all primes below %u is %llu\n",limit,sum);
+}
+
 
 void problem11(unsigned window,
                char *grid_file_path,
@@ -231,5 +278,6 @@ int main()
 	problem7(10001);
 	problem8(5,"problem8.strings",20,50);
 	problem9(1000);
+	problem10(2000000);
 	problem11(4,"problem11.strings",20,20);
 }
